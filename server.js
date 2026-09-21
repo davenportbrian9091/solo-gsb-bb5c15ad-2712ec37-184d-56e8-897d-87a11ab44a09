@@ -7,11 +7,12 @@
 const path = require('path');
 const express = require('express');
 const Braille = require('./lib/braille');
+const Qc = require('./lib/qc');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(express.json({ limit: '64kb' }));
+app.use(express.json({ limit: '4mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // 排版接口：输入标签文本与板材/点距/行距等参数，返回排版结果或放不下原因
@@ -26,6 +27,21 @@ app.post('/api/layout', (req, res) => {
     margin: body.margin,
     cellGap: body.cellGap,
     dotDiameter: body.dotDiameter
+  });
+  res.json(result);
+});
+
+// 压印质检接口：以成功排版的设计点为基准，比较偏移校准后的实测 CSV
+app.post('/api/qc', (req, res) => {
+  const body = req.body || {};
+  const result = Qc.analyze({
+    design: body.design,
+    csv: body.csv,
+    offsetX: body.offsetX,
+    offsetY: body.offsetY,
+    tolerance: body.tolerance,
+    maxRadius: body.maxRadius,
+    plate: body.plate
   });
   res.json(result);
 });

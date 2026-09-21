@@ -24,6 +24,32 @@ header {
 header h1 { margin: 0; font-size: 22px; }
 .subtitle { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
 
+.mode-tabs {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+.mode-tab {
+  padding: 7px 18px;
+  border: 1px solid var(--border);
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+  background: #e8edf2;
+  color: var(--muted);
+  font-size: 14px;
+  cursor: pointer;
+  margin-bottom: -1px;
+}
+.mode-tab.active {
+  background: var(--panel);
+  color: var(--accent);
+  font-weight: 600;
+  border-color: var(--border);
+  position: relative;
+  z-index: 1;
+}
+.mode-tab:hover:not(.active) { background: #dde4ec; }
+
 main {
   display: flex;
   gap: 18px;
@@ -154,6 +180,69 @@ textarea { resize: vertical; }
   max-height: 70vh;
 }
 .placeholder { color: var(--muted); font-size: 13px; }
+
+/* ---------- 压印质检 ---------- */
+.qc-baseline {
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 13px;
+  line-height: 1.7;
+  margin-bottom: 12px;
+}
+.qc-baseline.ok {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #166534;
+}
+.qc-baseline.warn {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  color: #92400e;
+}
+.qc-baseline code {
+  background: rgba(0, 0, 0, 0.06);
+  padding: 0 4px;
+  border-radius: 3px;
+}
+
+.qc-stats b { font-size: 14px; }
+.t-pass { color: #15803d; }
+.t-fail { color: #c2410c; }
+.t-miss { color: var(--danger); }
+.t-extra { color: #6d28d9; }
+
+.qc-legend-inline {
+  font-size: 12px;
+  color: var(--muted);
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+}
+.qc-legend-inline i.dot {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  margin-right: 3px;
+  vertical-align: -1px;
+}
+.dot-base { background: #c3cad3; }
+.dot-pass { background: #16a34a; }
+.dot-fail { background: #ea580c; }
+.dot-miss {
+  background: #fff;
+  border: 2px solid #dc2626;
+  border-radius: 50%;
+  box-sizing: border-box;
+}
+.dot-extra {
+  background: #ede9fe;
+  border: 2px solid #7c3aed;
+  border-radius: 2px;
+  transform: rotate(45deg);
+  box-sizing: border-box;
+}
 
 footer {
   padding: 0 28px 20px;

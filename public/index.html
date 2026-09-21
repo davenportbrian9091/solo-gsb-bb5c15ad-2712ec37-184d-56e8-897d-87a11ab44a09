@@ -9,10 +9,15 @@
 <body>
   <header>
     <h1>盲文标签排版台</h1>
-    <p class="subtitle">六点一级盲文 · 整词换行 · 毫米坐标凸点 SVG</p>
+    <p class="subtitle">六点一级盲文 · 整词换行 · 毫米坐标凸点 SVG · 压印质检</p>
+    <nav class="mode-tabs" role="tablist">
+      <button id="tabLayout" class="mode-tab active" type="button" role="tab" aria-selected="true">排版模式</button>
+      <button id="tabQc" class="mode-tab" type="button" role="tab" aria-selected="false">压印质检</button>
+    </nav>
   </header>
 
-  <main>
+  <!-- ============ 模式一：排版 ============ -->
+  <main id="paneLayout">
     <!-- 左侧：参数表单 -->
     <section class="panel form-panel" aria-label="排版参数">
       <label class="field">
@@ -80,8 +85,58 @@
     </section>
   </main>
 
+  <!-- ============ 模式二：压印质检 ============ -->
+  <main id="paneQc" hidden>
+    <section class="panel form-panel" aria-label="质检参数">
+      <div id="qcBaseline" class="qc-baseline"></div>
+
+      <label class="field">
+        <span>实测凸点 CSV（每行 <code>x_mm,y_mm</code>，首行可留表头）</span>
+        <textarea id="qcCsv" rows="8" placeholder="x_mm,y_mm&#10;5.02,4.98&#10;11.05,7.46&#10;..."></textarea>
+      </label>
+
+      <div class="grid-2">
+        <label class="field">
+          <span>X 校准偏移 (mm)</span>
+          <input id="qcOffsetX" type="number" step="0.05" value="0">
+        </label>
+        <label class="field">
+          <span>Y 校准偏移 (mm)</span>
+          <input id="qcOffsetY" type="number" step="0.05" value="0">
+        </label>
+        <label class="field">
+          <span>合格公差 (mm)</span>
+          <input id="qcTolerance" type="number" min="0" step="0.05" value="0.5">
+        </label>
+        <label class="field">
+          <span>最大关联半径 (mm)</span>
+          <input id="qcRadius" type="number" min="0.1" step="0.1" value="1.5">
+        </label>
+      </div>
+
+      <div id="qcErrors" class="errors" role="alert" hidden></div>
+      <div id="qcStats" class="stats qc-stats" hidden></div>
+
+      <div class="actions">
+        <button id="qcSample" type="button">基于当前基准生成示例</button>
+        <button id="qcDownload" type="button" disabled>下载质检 CSV 报告</button>
+      </div>
+    </section>
+
+    <section class="panel preview-panel" aria-label="质检叠加预览">
+      <div class="preview-head">
+        <h2>质检叠加图</h2>
+        <span id="qcLegendInline" class="qc-legend-inline"></span>
+      </div>
+      <div id="qcPreview" class="preview">
+        <p class="placeholder">请先在“排版模式”中完成一次成功排版，再粘贴实测凸点 CSV</p>
+      </div>
+    </section>
+  </main>
+
   <footer>
-    <p>转换规则：大写字母前加大写前缀 ⠠；连续数字段仅在段首加一个数字前缀 ⠼；按盲文单元整词换行，放不下时给出原因，绝不裁切。</p>
+    <p id="footerLayout">转换规则：大写字母前加大写前缀 ⠠；连续数字段仅在段首加一个数字前缀 ⠼；按盲文单元整词换行，放不下时给出原因，绝不裁切。</p>
+    <p id="footerQc" hidden>质检规则：实测点先应用 X/Y 校准偏移，再在关联半径内按“配对数最多、总距离最小”一对一匹配（禁止重复配对）；距离 ≤ 公差为合格，否则偏移超差；未配对设计点为缺失，未配对实测点为多余。</p>
   </footer>
 
   <script src="app.js"></script>
